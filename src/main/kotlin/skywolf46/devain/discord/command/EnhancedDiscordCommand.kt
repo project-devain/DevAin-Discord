@@ -28,7 +28,6 @@ import kotlin.concurrent.write
 abstract class EnhancedDiscordCommand(
     val command: String,
     val descrption: String = "제공된 명령어 설명이 존재하지 않습니다.",
-    val implementedButtons: List<String> = emptyList(),
     val modalId: Option<String> = None
 ) : BasicDiscordCommand() {
 
@@ -70,6 +69,7 @@ abstract class EnhancedDiscordCommand(
         }
     }
 
+    @Deprecated("Use ReplyCallAction#queueComponent instead; All action replaced with single-call lambda and fallback action")
     open fun onButtonClicked(event: ButtonInteractionEvent) {
         // Do nothing
     }

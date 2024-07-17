@@ -5,13 +5,21 @@ import net.dv8tion.jda.api.events.interaction.ModalInteractionEvent
 import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent
+import net.dv8tion.jda.api.events.interaction.component.StringSelectInteractionEvent
+import net.dv8tion.jda.api.events.message.MessageDeleteEvent
 import net.dv8tion.jda.api.hooks.ListenerAdapter
 import skywolf46.devain.discord.command.BasicDiscordCommand
 import skywolf46.devain.discord.command.EnhancedDiscordCommand
+import skywolf46.devain.discord.data.lifecycle.DiscordFallback
+import skywolf46.devain.discord.listeners.ActionListenerContainer
 
-class DiscordCommandAdapter(private val jda: JDA) : ListenerAdapter() {
+class DiscordCommandAdapter(
+    private val jda: JDA,
+    private val interactionFallback: DiscordFallback,
+    private val actionListenerContainer: ActionListenerContainer = ActionListenerContainer.SHARED,
+    private val lifespanManager: MessageListenerLifespanManager<Long> = MessageListenerLifespanManager.SHARED
+) : ListenerAdapter() {
     private val commandRegistry = mutableMapOf<String, BasicDiscordCommand>()
-    private val buttonRegistry = mutableMapOf<String, EnhancedDiscordCommand>()
     private val modalRegistry = mutableMapOf<String, EnhancedDiscordCommand>()
 
     fun registerCommands(vararg command: BasicDiscordCommand) {
@@ -23,9 +31,6 @@ class DiscordCommandAdapter(private val jda: JDA) : ListenerAdapter() {
             if (x is EnhancedDiscordCommand) {
                 x.modalId.onSome {
                     modalRegistry[it] = x
-                }
-                x.implementedButtons.forEach { btn ->
-                    buttonRegistry[btn] = x
                 }
             }
         }
@@ -45,6 +50,19 @@ class DiscordCommandAdapter(private val jda: JDA) : ListenerAdapter() {
     }
 
     override fun onButtonInteraction(event: ButtonInteractionEvent) {
-        buttonRegistry[event.componentId]?.onButtonClicked(event)
+        if (!actionListenerContainer.trigger(event.messageIdLong, event.componentId, event)) {
+            interactionFallback.expectButton(event)
+        }
+    }
+
+    override fun onStringSelectInteraction(event: StringSelectInteractionEvent) {
+        if(!actionListenerContainer.trigger(event.messageIdLong, event.componentId, event)) {
+            interactionFallback.expectStringSelection(event)
+        }
+    }
+
+    override fun onMessageDelete(event: MessageDeleteEvent) {
+        lifespanManager.removeLifespanObserver(event.messageIdLong)
+        actionListenerContainer.removeListener(event.messageIdLong)
     }
 }
