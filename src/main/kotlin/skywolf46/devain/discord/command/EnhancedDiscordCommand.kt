@@ -27,7 +27,7 @@ import kotlin.concurrent.write
 
 abstract class EnhancedDiscordCommand(
     val command: String,
-    val descrption: String = "제공된 명령어 설명이 존재하지 않습니다.",
+    val description: String = "제공된 명령어 설명이 존재하지 않습니다.",
     val modalId: Option<String> = None
 ) : BasicDiscordCommand() {
 
@@ -101,7 +101,7 @@ abstract class EnhancedDiscordCommand(
     }
 
     fun createCommandData(): SlashCommandData {
-        return Commands.slash(command, descrption).apply {
+        return Commands.slash(command, description).apply {
             modifyCommandData(this)
         }
     }
