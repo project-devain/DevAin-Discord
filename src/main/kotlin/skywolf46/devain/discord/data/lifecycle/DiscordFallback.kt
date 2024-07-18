@@ -4,52 +4,50 @@ import net.dv8tion.jda.api.events.Event
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent
 import net.dv8tion.jda.api.events.interaction.component.EntitySelectInteractionEvent
 import net.dv8tion.jda.api.events.interaction.component.StringSelectInteractionEvent
+import java.util.concurrent.locks.ReentrantReadWriteLock
+import kotlin.concurrent.read
+import kotlin.concurrent.write
 
-class DiscordFallback(private val fallbacks: Map<String, (Event) -> Unit>) {
-    companion object {
-        @JvmStatic
-        fun builder(): Builder {
-            return Builder()
-        }
-    }
+class DiscordFallback {
+    private val fallbacks = mutableMapOf<String, (Event) -> Unit>()
+
+    private val lock = ReentrantReadWriteLock()
 
     fun <T : Event> expect(key: String, data: T) {
-        fallbacks[key]?.invoke(data)
+        lock.read {
+            fallbacks[key]?.invoke(data)
+        }
     }
 
     fun expectButton(event: ButtonInteractionEvent) {
-        fallbacks[event.componentId]?.invoke(event)
+        expect(event.componentId, event)
     }
 
     fun expectStringSelection(event: StringSelectInteractionEvent) {
-        fallbacks[event.componentId]?.invoke(event)
+        expect(event.componentId, event)
     }
 
     fun expectSelection(event: EntitySelectInteractionEvent) {
-        fallbacks[event.componentId]?.invoke(event)
+        expect(event.componentId, event)
     }
 
-    class Builder {
-        private val fallbacks = mutableMapOf<String, (Event) -> Unit>()
 
-        fun <LISTENER : Event> fallback(name: String, fallback: (LISTENER) -> Unit) {
+    fun <LISTENER : Event> fallback(name: String, fallback: (LISTENER) -> Unit) {
+        lock.write {
             fallbacks[name] = fallback as (Event) -> Unit
         }
-
-        fun buttonFallback(key: String, fallback: (ButtonInteractionEvent) -> Unit) {
-            fallback(key, fallback)
-        }
-
-        fun stringSelectionFallback(key: String, fallback: (StringSelectInteractionEvent) -> Unit) {
-            fallback(key, fallback)
-        }
-
-        fun selectionFallback(key: String, fallback: (EntitySelectInteractionEvent) -> Unit) {
-            fallback(key, fallback)
-        }
-
-        fun build(): DiscordFallback {
-            return DiscordFallback(fallbacks)
-        }
     }
+
+    fun buttonFallback(key: String, fallback: (ButtonInteractionEvent) -> Unit) {
+        fallback(key, fallback)
+    }
+
+    fun stringSelectionFallback(key: String, fallback: (StringSelectInteractionEvent) -> Unit) {
+        fallback(key, fallback)
+    }
+
+    fun selectionFallback(key: String, fallback: (EntitySelectInteractionEvent) -> Unit) {
+        fallback(key, fallback)
+    }
+
 }
