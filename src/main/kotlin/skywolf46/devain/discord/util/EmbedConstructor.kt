@@ -7,10 +7,9 @@ import net.dv8tion.jda.api.interactions.components.ActionRow
 import net.dv8tion.jda.api.requests.restaction.MessageEditAction
 import net.dv8tion.jda.api.requests.restaction.WebhookMessageCreateAction
 import skywolf46.devain.discord.data.components.DiscordComponent
-import skywolf46.devain.discord.data.lifecycle.Lifespan
 import java.awt.Color
 
-class EmbedConstructor(val lifespan: Lifespan) {
+class EmbedConstructor(private val placeholder: Map<String, String>) {
     private val builder: EmbedBuilder = EmbedBuilder()
     private val builtComponents = mutableListOf<List<DiscordComponent<*>>>()
 
@@ -24,8 +23,14 @@ class EmbedConstructor(val lifespan: Lifespan) {
         return this
     }
 
-    fun withField(name: String, value: String, inline: Boolean = false): EmbedConstructor {
-        builder.addField(name, value, inline)
+    fun withField(name: String, value: String): EmbedConstructor {
+        builder.addField(name.replaceAllArgument(placeholder), value.replaceAllArgument(placeholder), false)
+        return this
+    }
+
+
+    fun withInlineField(name: String, value: String): EmbedConstructor {
+        builder.addField(name.replaceAllArgument(placeholder), value.replaceAllArgument(placeholder), false)
         return this
     }
 
@@ -69,7 +74,7 @@ class EmbedConstructor(val lifespan: Lifespan) {
         return this
     }
 
-    fun reply(hook: InteractionHook) : WebhookMessageCreateAction<Message>{
+    fun reply(hook: InteractionHook): WebhookMessageCreateAction<Message> {
         return hook.sendMessageEmbeds(builder.build()).apply {
             addComponents(builtComponents.map {
                 ActionRow.of(
@@ -79,11 +84,15 @@ class EmbedConstructor(val lifespan: Lifespan) {
         }
     }
 
-    fun modify(message: Message) : MessageEditAction {
+    fun modify(message: Message): MessageEditAction {
         return message.editMessageComponents(builtComponents.map {
             ActionRow.of(
                 *it.map { component -> component.build() }.toTypedArray()
             )
         })
+    }
+
+    fun appendField(message: String): EmbedConstructor {
+        return withField("Message", message)
     }
 }
