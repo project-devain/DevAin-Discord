@@ -7,7 +7,7 @@ import skywolf46.devain.discord.util.ParsedParameter
 import kotlin.reflect.KClass
 
 abstract class ReflectedDiscordCommand<T : Any>(
-    command: String, val parameterClass: KClass<T>, description: String = "제공된 명령어 설명이 존재하지 않습니다."
+    command: String, description: String = "제공된 명령어 설명이 존재하지 않습니다.", val parameterClass: KClass<T>
 ) : EnhancedDiscordCommand(command, description) {
     private val parsed = ParsedParameter(parameterClass)
 
