@@ -9,9 +9,15 @@ import net.dv8tion.jda.api.requests.restaction.WebhookMessageCreateAction
 import skywolf46.devain.discord.data.components.DiscordComponent
 import java.awt.Color
 
-class EmbedConstructor(private val placeholder: Map<String, String>) {
+class EmbedConstructor( placeholder: Map<String, String> = emptyMap()) {
     private val builder: EmbedBuilder = EmbedBuilder()
     private val builtComponents = mutableListOf<List<DiscordComponent<*>>>()
+    private val placeholder = placeholder.toMutableMap()
+
+    fun addPlaceholder(key: String, value: String): EmbedConstructor {
+        placeholder[key] = value
+        return this
+    }
 
     fun withTitle(title: String): EmbedConstructor {
         builder.setTitle(title)
