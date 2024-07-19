@@ -52,8 +52,5 @@ class SelectionComponent(
         private fun SelectOption.applyDefault(): SelectOption {
             return if (this@SelectionValue.isDefault) withDefault(true) else withDefault(false)
         }
-
-
     }
-
 }
