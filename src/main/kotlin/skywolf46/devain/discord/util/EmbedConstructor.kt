@@ -1,17 +1,12 @@
 package skywolf46.devain.discord.util
 
+import arrow.core.Option
 import net.dv8tion.jda.api.EmbedBuilder
-import net.dv8tion.jda.api.entities.Message
-import net.dv8tion.jda.api.interactions.InteractionHook
-import net.dv8tion.jda.api.interactions.components.ActionRow
-import net.dv8tion.jda.api.requests.restaction.MessageEditAction
-import net.dv8tion.jda.api.requests.restaction.WebhookMessageCreateAction
-import skywolf46.devain.discord.data.components.DiscordComponent
+import net.dv8tion.jda.api.entities.MessageEmbed
 import java.awt.Color
 
-class EmbedConstructor( placeholder: Map<String, String> = emptyMap()) {
+class EmbedConstructor(placeholder: Map<String, String> = emptyMap()) {
     private val builder: EmbedBuilder = EmbedBuilder()
-    private val builtComponents = mutableListOf<List<DiscordComponent<*>>>()
     private val placeholder = placeholder.toMutableMap()
 
     fun addPlaceholder(key: String, value: String): EmbedConstructor {
@@ -36,13 +31,38 @@ class EmbedConstructor( placeholder: Map<String, String> = emptyMap()) {
 
 
     fun withInlineField(name: String, value: String): EmbedConstructor {
-        builder.addField(name.replaceAllArgument(placeholder), value.replaceAllArgument(placeholder), false)
+        builder.addField(name.replaceAllArgument(placeholder), value.replaceAllArgument(placeholder), true)
         return this
     }
 
     fun withBlankField(inline: Boolean = false): EmbedConstructor {
         builder.addBlankField(inline)
         return this
+    }
+
+    fun <T : Any> withNullableField(option: Option<T>, title: String, mapper: (T) -> String): EmbedConstructor {
+        if (option.isNone())
+            return this
+        return withField(title, mapper(option.getOrNull()!!))
+    }
+
+
+    fun <T : Any> withNullableInlineField(option: Option<T>, title: String, mapper: (T) -> String): EmbedConstructor {
+        if (option.isNone())
+            return this
+        return withInlineField(title, mapper(option.getOrNull()!!))
+    }
+
+    fun withPredicateField(option: Option<Boolean>, title: String, mapper: () -> String) : EmbedConstructor {
+        if (option.getOrNull() != true)
+            return this
+        return withField(title, mapper())
+    }
+
+    fun withPredicateInlineField(option: Option<Boolean>, title: String, mapper: () -> String) : EmbedConstructor {
+        if (option.getOrNull() != true)
+            return this
+        return withInlineField(title, mapper())
     }
 
     fun withFooter(text: String, iconUrl: String? = null): EmbedConstructor {
@@ -75,27 +95,8 @@ class EmbedConstructor( placeholder: Map<String, String> = emptyMap()) {
         return this
     }
 
-    fun withComponentRow(vararg component: DiscordComponent<*>): EmbedConstructor {
-        builtComponents.add(component.toList())
-        return this
-    }
-
-    fun reply(hook: InteractionHook): WebhookMessageCreateAction<Message> {
-        return hook.sendMessageEmbeds(builder.build()).apply {
-            addComponents(builtComponents.map {
-                ActionRow.of(
-                    *it.map { component -> component.build() }.toTypedArray()
-                )
-            })
-        }
-    }
-
-    fun modify(message: Message): MessageEditAction {
-        return message.editMessageComponents(builtComponents.map {
-            ActionRow.of(
-                *it.map { component -> component.build() }.toTypedArray()
-            )
-        })
+    fun construct() : MessageEmbed{
+        return builder.build()
     }
 
     fun appendField(message: String): EmbedConstructor {
