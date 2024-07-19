@@ -15,7 +15,7 @@ repositories {
 }
 
 depdendencies {
-    implementation "skywolf46:devain-discord-jda:1.5.0"
+    implementation "skywolf46:devain-discord-jda:1.6.0"
 }
 ```
 
