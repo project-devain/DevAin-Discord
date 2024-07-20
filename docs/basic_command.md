@@ -1,4 +1,5 @@
-### [~~<⠀⠀~~ 상위 페이지로 돌아가기](../README.md)
+### [~~<⠀⠀~~ 상위 페이지로 돌아가기](../README.md?tab=readme-ov-file#%EC%82%AC%EC%9A%A9%EB%B2%95)
+
 # Devain Discord Wrapper API 문서
 
 ## 명령어 만들기 - 기초
