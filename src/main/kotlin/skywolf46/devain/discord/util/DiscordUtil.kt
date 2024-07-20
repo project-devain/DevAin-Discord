@@ -6,13 +6,11 @@ import arrow.core.right
 import net.dv8tion.jda.api.entities.Message
 import net.dv8tion.jda.api.events.Event
 import net.dv8tion.jda.api.interactions.InteractionHook
-import net.dv8tion.jda.api.interactions.components.buttons.ButtonStyle
 import net.dv8tion.jda.api.requests.restaction.WebhookMessageCreateAction
 import net.dv8tion.jda.api.requests.restaction.interactions.ReplyCallbackAction
 import skywolf46.devain.discord.MessageListenerLifespanManager
 import skywolf46.devain.discord.data.components.DiscordComponent
 import skywolf46.devain.discord.data.components.DiscordComponentRow
-import skywolf46.devain.discord.data.components.TextButton
 import skywolf46.devain.discord.data.lifecycle.Lifespan
 import skywolf46.devain.discord.listeners.ActionListenerContainer
 
@@ -20,7 +18,9 @@ fun Message.queueEditComponents(
     listenerLifespan: Lifespan,
     removeIfExpired: Boolean = false,
     vararg components: DiscordComponentRow,
-    callback: (Either<Throwable, Message>) -> Unit = {},
+    callback: (Either<Throwable, Message>) -> Unit = {
+        it.onLeft { exception -> exception.printStackTrace() }
+    },
     lifespanManager: MessageListenerLifespanManager<Long> = MessageListenerLifespanManager.SHARED,
     actionListenerContainer: ActionListenerContainer = ActionListenerContainer.SHARED
 ) {
@@ -46,7 +46,9 @@ fun Message.queueEditComponents(
     listenerLifespan: Lifespan,
     removeIfExpired: Boolean = false,
     vararg components: DiscordComponentRow,
-    callback: (Either<Throwable, Message>) -> Unit = {}
+    callback: (Either<Throwable, Message>) -> Unit = {
+        it.onLeft { exception -> exception.printStackTrace() }
+    }
 ) {
     queueEditComponents(
         listenerLifespan,
@@ -62,7 +64,9 @@ fun Message.queueEditComponents(
     listenerLifespan: Lifespan,
     removeIfExpired: Boolean = false,
     vararg components: DiscordComponent<*>,
-    callback: (Either<Throwable, Message>) -> Unit = {},
+    callback: (Either<Throwable, Message>) -> Unit = {
+        it.onLeft { exception -> exception.printStackTrace() }
+    },
     lifespanManager: MessageListenerLifespanManager<Long> = MessageListenerLifespanManager.SHARED,
     actionListenerContainer: ActionListenerContainer = ActionListenerContainer.SHARED
 ) {
@@ -80,7 +84,9 @@ fun Message.queueEditComponents(
     listenerLifespan: Lifespan,
     removeIfExpired: Boolean = false,
     vararg components: DiscordComponent<*>,
-    callback: (Either<Throwable, Message>) -> Unit = {}
+    callback: (Either<Throwable, Message>) -> Unit = {
+        it.onLeft { exception -> exception.printStackTrace() }
+    }
 ) {
     queueEditComponents(
         listenerLifespan,
@@ -97,7 +103,9 @@ fun Message.queueReplyComponents(
     listenerLifespan: Lifespan,
     removeIfExpired: Boolean = false,
     vararg components: DiscordComponentRow,
-    callback: (Either<Throwable, Message>) -> Unit = {},
+    callback: (Either<Throwable, Message>) -> Unit = {
+        it.onLeft { exception -> exception.printStackTrace() }
+    },
     lifespanManager: MessageListenerLifespanManager<Long> = MessageListenerLifespanManager.SHARED,
     actionListenerContainer: ActionListenerContainer = ActionListenerContainer.SHARED
 ) {
@@ -123,7 +131,9 @@ fun Message.queueReplyComponents(
     listenerLifespan: Lifespan,
     removeIfExpired: Boolean = false,
     vararg components: DiscordComponentRow,
-    callback: (Either<Throwable, Message>) -> Unit = {}
+    callback: (Either<Throwable, Message>) -> Unit = {
+        it.onLeft { exception -> exception.printStackTrace() }
+    }
 ) {
     queueReplyComponents(
         listenerLifespan,
@@ -139,7 +149,9 @@ fun Message.queueReplyComponents(
     listenerLifespan: Lifespan,
     removeIfExpired: Boolean = false,
     vararg components: DiscordComponent<*>,
-    callback: (Either<Throwable, Message>) -> Unit = {},
+    callback: (Either<Throwable, Message>) -> Unit = {
+        it.onLeft { exception -> exception.printStackTrace() }
+    },
     lifespanManager: MessageListenerLifespanManager<Long> = MessageListenerLifespanManager.SHARED,
     actionListenerContainer: ActionListenerContainer = ActionListenerContainer.SHARED
 ) {
@@ -157,7 +169,9 @@ fun Message.queueReplyComponents(
     listenerLifespan: Lifespan,
     removeIfExpired: Boolean = false,
     vararg components: DiscordComponent<*>,
-    callback: (Either<Throwable, Message>) -> Unit = {}
+    callback: (Either<Throwable, Message>) -> Unit = {
+        it.onLeft { exception -> exception.printStackTrace() }
+    }
 ) {
     queueReplyComponents(
         listenerLifespan,
@@ -173,7 +187,9 @@ fun WebhookMessageCreateAction<Message>.queueComponents(
     listenerLifespan: Lifespan,
     removeIfExpired: Boolean = false,
     vararg components: DiscordComponentRow,
-    callback: (Either<Throwable, Message>) -> Unit = {},
+    callback: (Either<Throwable, Message>) -> Unit = {
+        it.onLeft { exception -> exception.printStackTrace() }
+    },
     lifespanManager: MessageListenerLifespanManager<Long> = MessageListenerLifespanManager.SHARED,
     actionListenerContainer: ActionListenerContainer = ActionListenerContainer.SHARED
 ) {
@@ -196,7 +212,9 @@ fun WebhookMessageCreateAction<Message>.queueComponents(
     listenerLifespan: Lifespan,
     removeIfExpired: Boolean = false,
     vararg components: DiscordComponentRow,
-    callback: (Either<Throwable, Message>) -> Unit = {}
+    callback: (Either<Throwable, Message>) -> Unit = {
+        it.onLeft { exception -> exception.printStackTrace() }
+    }
 ) {
     queueComponents(
         listenerLifespan,
@@ -212,7 +230,9 @@ fun WebhookMessageCreateAction<Message>.queueComponents(
     listenerLifespan: Lifespan,
     removeIfExpired: Boolean = false,
     vararg components: DiscordComponent<*>,
-    callback: (Either<Throwable, Message>) -> Unit = {},
+    callback: (Either<Throwable, Message>) -> Unit = {
+        it.onLeft { exception -> exception.printStackTrace() }
+    },
     lifespanManager: MessageListenerLifespanManager<Long> = MessageListenerLifespanManager.SHARED,
     actionListenerContainer: ActionListenerContainer = ActionListenerContainer.SHARED
 ) {
@@ -230,7 +250,9 @@ fun WebhookMessageCreateAction<Message>.queueComponents(
     listenerLifespan: Lifespan,
     removeIfExpired: Boolean = false,
     vararg components: DiscordComponent<*>,
-    callback: (Either<Throwable, Message>) -> Unit = {}
+    callback: (Either<Throwable, Message>) -> Unit = {
+        it.onLeft { exception -> exception.printStackTrace() }
+    }
 ) {
     queueComponents(
         listenerLifespan,
@@ -243,12 +265,13 @@ fun WebhookMessageCreateAction<Message>.queueComponents(
 }
 
 
-
 fun ReplyCallbackAction.queueComponents(
     listenerLifespan: Lifespan,
     removeIfExpired: Boolean = false,
     vararg components: DiscordComponentRow,
-    callback: (Either<Throwable, InteractionHook>) -> Unit = {},
+    callback: (Either<Throwable, InteractionHook>) -> Unit = {
+        it.onLeft { exception -> exception.printStackTrace() }
+    },
     lifespanManager: MessageListenerLifespanManager<Long> = MessageListenerLifespanManager.SHARED,
     actionListenerContainer: ActionListenerContainer = ActionListenerContainer.SHARED
 ) {
@@ -273,7 +296,9 @@ fun ReplyCallbackAction.queueComponents(
     listenerLifespan: Lifespan,
     removeIfExpired: Boolean = false,
     vararg components: DiscordComponentRow,
-    callback: (Either<Throwable, InteractionHook>) -> Unit = {}
+    callback: (Either<Throwable, InteractionHook>) -> Unit = {
+        it.onLeft { exception -> exception.printStackTrace() }
+    }
 ) {
     queueComponents(
         listenerLifespan,
@@ -289,7 +314,9 @@ fun ReplyCallbackAction.queueComponents(
     listenerLifespan: Lifespan,
     removeIfExpired: Boolean = false,
     vararg components: DiscordComponent<*>,
-    callback: (Either<Throwable, InteractionHook>) -> Unit = {},
+    callback: (Either<Throwable, InteractionHook>) -> Unit = {
+        it.onLeft { exception -> exception.printStackTrace() }
+    },
     lifespanManager: MessageListenerLifespanManager<Long> = MessageListenerLifespanManager.SHARED,
     actionListenerContainer: ActionListenerContainer = ActionListenerContainer.SHARED
 ) {
@@ -307,7 +334,9 @@ fun ReplyCallbackAction.queueComponents(
     listenerLifespan: Lifespan,
     removeIfExpired: Boolean = false,
     vararg components: DiscordComponent<*>,
-    callback: (Either<Throwable, InteractionHook>) -> Unit = {}
+    callback: (Either<Throwable, InteractionHook>) -> Unit = {
+        it.onLeft { exception -> exception.printStackTrace() }
+    }
 ) {
     queueComponents(
         listenerLifespan,
