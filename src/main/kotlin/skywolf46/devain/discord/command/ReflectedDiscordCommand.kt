@@ -3,7 +3,7 @@ package skywolf46.devain.discord.command
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent
 import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData
 import skywolf46.devain.discord.data.CommandEvent
-import skywolf46.devain.discord.util.ParsedParameter
+import skywolf46.devain.discord.data.ParsedParameter
 import kotlin.reflect.KClass
 
 abstract class ReflectedDiscordCommand<T : Any>(
@@ -24,14 +24,24 @@ abstract class ReflectedDiscordCommand<T : Any>(
 
     override suspend fun onCommand(event: SlashCommandInteractionEvent) {
         val constructed = parameterClass.constructors.first().callBy(parsed.parameters.mapValues {
+            val converted = it.value.type.converter(event, it.value.name)
+            it.value.checkRestricted(converted).onSome { message ->
+                onFatalError(event, message)
+                return
+            }
             it.value.type.converter(event, it.value.name)
         }.filterValues { it != null })
+
         onParameterCommand(CommandEvent(event), constructed)
     }
 
     abstract suspend fun onParameterCommand(event: CommandEvent, data: T)
 
     open fun onCommandParameterDataRequested(): Map<String, String> = emptyMap()
+
+    open fun onFatalError(event: SlashCommandInteractionEvent, message: String) {
+        event.reply(message).queue()
+    }
 
     private fun String.replaceAllArgument(args: Map<String, String>): String {
         return (listOf(this to "") + args.toList()).reduce { acc, pair ->
