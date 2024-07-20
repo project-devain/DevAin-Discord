@@ -22,6 +22,9 @@ enum class OptionClassConverter(
         getOption(it)?.asDouble?.toFloat()
     }),
     INTEGER(OptionType.INTEGER, {
-        getOption(it)?.asInt?.toFloat()
+        getOption(it)?.asInt
+    }),
+    ATTACHMENT(OptionType.ATTACHMENT, {
+        getOption(it)?.asAttachment
     })
 }
