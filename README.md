@@ -22,4 +22,5 @@ depdendencies {
 ## 사용법
 - [기초적인 명령어 만들기](docs/basic_command.md)
 - [모달 기반 명령어 만들기](docs/modal_command.md)
+- [명령어에 자동 완성 추가하기](docs/auto_complete_command.md)
 - [명령어에 버튼 추가하기](docs/button_command.md)
