@@ -6,8 +6,7 @@ import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent
 import net.dv8tion.jda.api.events.interaction.component.EntitySelectInteractionEvent
 import net.dv8tion.jda.api.events.interaction.component.StringSelectInteractionEvent
 import net.dv8tion.jda.api.requests.GatewayIntent
-import skywolf46.devain.discord.command.BasicDiscordCommand
-import skywolf46.devain.discord.command.EnhancedDiscordCommand
+import skywolf46.devain.discord.command.*
 import skywolf46.devain.discord.data.lifecycle.DiscordFallback
 
 class DiscordWrapper(val jda: JDA, val fallback: DiscordFallback = DiscordFallback()) {
@@ -29,20 +28,15 @@ class DiscordWrapper(val jda: JDA, val fallback: DiscordFallback = DiscordFallba
         DiscordCommandAdapter(jda, fallback)
     }
 
-    private val commands = mutableListOf<BasicDiscordCommand>()
-
-
     fun registerCommands(vararg command: BasicDiscordCommand): DiscordWrapper {
-        commands.addAll(command)
+        commandAdapter.prepareRegisterCommands(*command)
         return this
     }
 
     fun registerCommands(vararg command: EnhancedDiscordCommand): DiscordWrapper {
-        commands.addAll(command)
+        commandAdapter.prepareRegisterCommands(*command)
         return this
     }
-
-
 
     fun fallbackButton(key: String, fallback: (ButtonInteractionEvent) -> Unit): DiscordWrapper {
         this.fallback.buttonFallback(key, fallback)
@@ -59,8 +53,18 @@ class DiscordWrapper(val jda: JDA, val fallback: DiscordFallback = DiscordFallba
         return this
     }
 
+    fun registerUserCommands(vararg command: UserCommand) : DiscordWrapper {
+        commandAdapter.prepareUserCommands(*command)
+        return this
+    }
+
+    fun registerMessageCommands(vararg command: MessageCommand): DiscordWrapper {
+        commandAdapter.prepareMessageCommands(*command)
+        return this
+    }
+
     fun finishSetup() {
         jda.addEventListener(commandAdapter)
-        commandAdapter.registerCommands(*commands.toTypedArray())
+        commandAdapter.finalizeRegistration()
     }
 }

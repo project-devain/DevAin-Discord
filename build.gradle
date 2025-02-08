@@ -20,11 +20,15 @@ repositories {
     maven {
         url = "https://repo.trinarywolf.net/releases"
     }
+    maven { url 'https://jitpack.io' }
 }
 
 dependencies {
     api("skywolf46:devain-version-full:1.3.2")
-    api("net.dv8tion:JDA:5.0.0") {
+//    api("net.dv8tion:JDA:5.2.3") {
+//        exclude module: 'opus-java'
+//    }
+    api("com.github.freya022:JDA:5fb5005") {
         exclude module: 'opus-java'
     }
 }

@@ -1,5 +1,7 @@
 package skywolf46.devain.discord.command
 
+import arrow.core.None
+import arrow.core.Option
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent
 import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData
 import skywolf46.devain.discord.data.CommandEvent
@@ -7,8 +9,9 @@ import skywolf46.devain.discord.data.ParsedParameter
 import kotlin.reflect.KClass
 
 abstract class ReflectedDiscordCommand<T : Any>(
-    command: String, description: String = "제공된 명령어 설명이 존재하지 않습니다.", val parameterClass: KClass<T>
-) : EnhancedDiscordCommand(command, description) {
+    command: String, description: String = "제공된 명령어 설명이 존재하지 않습니다.", val parameterClass: KClass<T>,
+    modalId : Option<String> = None
+) : EnhancedDiscordCommand(command, description, modalId) {
     private val parsed = ParsedParameter(parameterClass)
 
     override fun modifyCommandData(options: SlashCommandData) {

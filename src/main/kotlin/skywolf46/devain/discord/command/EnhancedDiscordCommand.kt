@@ -19,6 +19,7 @@ import net.dv8tion.jda.api.interactions.commands.build.Commands
 import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData
 import net.dv8tion.jda.api.interactions.modals.Modal
 import net.dv8tion.jda.api.utils.FileUpload
+import skywolf46.devain.discord.data.PredefinedCommandData
 import java.util.concurrent.locks.ReentrantLock
 import java.util.concurrent.locks.ReentrantReadWriteLock
 import kotlin.concurrent.read
@@ -100,14 +101,10 @@ abstract class EnhancedDiscordCommand(
         }
     }
 
-    fun createCommandData(): SlashCommandData {
-        return Commands.slash(command, description).apply {
+    override fun provideCommands(): List<PredefinedCommandData> {
+        return listOf(PredefinedCommandData(command, Commands.slash(command, description).apply {
             modifyCommandData(this)
-        }
-    }
-
-    override fun createCommandInfo(): Pair<String, CommandData> {
-        return command to createCommandData()
+        }))
     }
 
     protected fun box(string: String, prefix: String = ""): String {
