@@ -1,6 +1,7 @@
 package skywolf46.devain.discord.data.components
 
-import net.dv8tion.jda.api.interactions.components.ActionRow
+import net.dv8tion.jda.api.components.actionrow.ActionRow
+
 
 data class DiscordComponentRow(val components: List<DiscordComponent<*>>) {
     companion object {

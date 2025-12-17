@@ -3,12 +3,11 @@ package skywolf46.devain.discord.data.components
 import arrow.core.None
 import arrow.core.Option
 import arrow.core.getOrElse
+import net.dv8tion.jda.api.components.actionrow.ActionRowChildComponent
+import net.dv8tion.jda.api.components.selections.SelectOption
+import net.dv8tion.jda.api.components.selections.StringSelectMenu
 import net.dv8tion.jda.api.entities.emoji.Emoji
-import net.dv8tion.jda.api.events.interaction.component.EntitySelectInteractionEvent
 import net.dv8tion.jda.api.events.interaction.component.StringSelectInteractionEvent
-import net.dv8tion.jda.api.interactions.components.ItemComponent
-import net.dv8tion.jda.api.interactions.components.selections.SelectOption
-import net.dv8tion.jda.api.interactions.components.selections.StringSelectMenu
 
 class SelectionComponent(
     val id: String,
@@ -16,7 +15,7 @@ class SelectionComponent(
     val selectRange: IntRange = 1..1,
     val onClick: StringSelectInteractionEvent.() -> Unit
 ) : DiscordComponent<StringSelectInteractionEvent> {
-    override fun build(): ItemComponent {
+    override fun build(): ActionRowChildComponent {
         return StringSelectMenu.create(getComponentId()).setRequiredRange(
             selectRange.first, selectRange.last
         ).addOptions(list.map { it.asSelectOption() }).build()

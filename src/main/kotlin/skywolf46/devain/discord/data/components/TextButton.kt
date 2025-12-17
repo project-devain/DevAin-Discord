@@ -1,11 +1,10 @@
 package skywolf46.devain.discord.data.components
 
+import net.dv8tion.jda.api.components.actionrow.ActionRowChildComponent
+import net.dv8tion.jda.api.components.buttons.Button
+import net.dv8tion.jda.api.components.buttons.ButtonStyle
 import net.dv8tion.jda.api.entities.emoji.Emoji
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent
-import net.dv8tion.jda.api.interactions.components.ItemComponent
-import net.dv8tion.jda.api.interactions.components.buttons.Button
-import net.dv8tion.jda.api.interactions.components.buttons.ButtonStyle
-
 data class TextButton(
     val id: String,
     val label: String,
@@ -17,7 +16,7 @@ data class TextButton(
         return id
     }
 
-    override fun build(): ItemComponent {
+    override fun build(): ActionRowChildComponent {
         return if (emoji == null) Button.of(style, getComponentId(), label) else Button.of(
             style, getComponentId(), label, emoji
         )
